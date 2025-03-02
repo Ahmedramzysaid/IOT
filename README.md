@@ -1,5 +1,4 @@
-# Smart Agricultural Management Platform - Egypt
-
+# Smart Agricultural Management Platform 
 ## Introduction
 
 The agricultural sector is a cornerstone of Egypt's economy, playing a vital role in food supply, employment, and national food security. From the ancient Pharaonic civilization, which thrived on the Nile's fertile banks, to modern Egypt, agriculture remains a significant contributor to the nation's GDP. However, the sector faces numerous challenges that threaten its efficiency and sustainability.
