@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT Video Player</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        .controls-container {
+            padding: 15px 20px;
+        }
+
+        .custom-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #106ebe;
+        }
+
+        .progress-container {
+            height: 6px;
+            background-color: #333;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .progress-bar {
+            background-color: #0078d7;
+            height: 100%;
+            border-radius: 3px;
+            width: 0;
+        }
+
+        .time-display {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .video-info {
+            padding: 0 20px 20px 20px;
+        }
+
+        .playlist {
+            margin-top: 20px;
+            background-color: #252525;
+            border-radius: 4px;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .playlist-item:hover {
+            background-color: #333;
+        }
+
+        .playlist-item.active {
+            background-color: #0078d7;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 45px;
+            background-color: #555;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="player-container">
+        <div class="video-container">
+            <video id="videoPlayer" preload="auto">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="controls-container">
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="custom-controls">
+                <div class="playback-controls">
+                    <button id="playPauseBtn">Play</button>
+                    <button id="muteBtn">Mute</button>
+                    <span class="time-display">
+                        <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                    </span>
+                </div>
+
+                <div>
+                    <button id="fullscreenBtn">Fullscreen</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-info">
+            <h2>IOT Agriculture System</h2>
+            <p>Video demonstration of IOT applications in agriculture.</p>
+
+            <div class="playlist">
+                <h3>Related Videos</h3>
+                <div class="playlist-item active" data-src="D:/git repo/Multimedia/Video/IOTVideo.mp4">
+                    <div class="thumbnail">
+                        <img src="./thumbnails/iot_thumbnail.jpg" alt="IOT thumbnail"
+                            onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%2280%22 height%3D%2245%22%3E%3Crect fill%3D%22%23555%22 width%3D%2280%22 height%3D%2245%22%2F%3E%3Ctext fill%3D%22%23fff%22 font-family%3D%22sans-serif%22 font-size%3D%2212%22 x%3D%2225%22 y%3D%2225%22%3EVideo%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                    </div>
+                    <span>IOT Agriculture System</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const progressBar = document.getElementById('progressBar');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const durationDisplay = document.getElementById('duration');
+            const progressContainer = document.getElementById('progressContainer');
+            const playlistItems = document.querySelectorAll('.playlist-item');
+
+            // Initialize with your IOT video
+            const initialVideo = document.querySelector('.playlist-item.active').dataset.src;
+            videoPlayer.src = initialVideo;
+
+            // Playlist click handler
+            playlistItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    playlistItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const newSrc = this.dataset.src;
+                    videoPlayer.src = newSrc;
+                    videoPlayer.load();
+                    videoPlayer.play();
+                    playPauseBtn.textContent = 'Pause';
+                });
+            });
+
+            // Play/Pause control
+            playPauseBtn.addEventListener('click', () => {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                    playPauseBtn.textContent = 'Pause';
+                } else {
+                    videoPlayer.pause();
+                    playPauseBtn.textContent = 'Play';
+                }
+            });
+
+            // Mute control
+            muteBtn.addEventListener('click', () => {
+                videoPlayer.muted = !videoPlayer.muted;
+                muteBtn.textContent = videoPlayer.muted ? 'Unmute' : 'Mute';
+            });
+
+            // Fullscreen control
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    videoPlayer.parentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // Progress bar updates
+            videoPlayer.addEventListener('timeupdate', updateProgress);
+            videoPlayer.addEventListener('loadedmetadata', () => {
+                durationDisplay.textContent = formatTime(videoPlayer.duration);
+            });
+
+            // Progress bar click handler
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                videoPlayer.currentTime = pos * videoPlayer.duration;
+            });
+
+            // Time formatting
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                seconds = Math.floor(seconds % 60);
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // Update progress bar and time display
+            function updateProgress() {
+                const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                currentTimeDisplay.textContent = formatTime(videoPlayer.currentTime);
+            }
+
+            // Initial play button state
+            playPauseBtn.textContent = videoPlayer.paused ? 'Play' : 'Pause';
+        });
+    </script>
+</body>
+
+</html>
